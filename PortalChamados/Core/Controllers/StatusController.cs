@@ -6,7 +6,7 @@ namespace PortalChamados.Core.Controllers
 {
 	public class StatusController : Controller<Status>
 	{
-		public StatusController(IBaseOperations<Status> BussinessService, IFilter<Status> Filters) : base(BussinessService, Filters)
+		public StatusController(IBaseOperations<Status> BussinessService) : base(BussinessService)
 		{
 		}
 	}

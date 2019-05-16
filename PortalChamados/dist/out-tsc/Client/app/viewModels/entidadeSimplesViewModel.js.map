@@ -1,0 +1,1 @@
+{"version":3,"file":"entidadeSimplesViewModel.js","sourceRoot":"","sources":["../../../../../Client/app/viewModels/entidadeSimplesViewModel.ts"],"names":[],"mappings":"AAKA;IAII,kCAAY,eAA0C;QAClD,IAAI,CAAC,eAAe,EAAE;YAClB,OAAO;SACV;QAED,IAAI,CAAC,EAAE,GAAG,eAAe,CAAC,EAAE,CAAC;QAC7B,IAAI,CAAC,IAAI,GAAG,eAAe,CAAC,IAAI,CAAC;IACrC,CAAC;IACL,+BAAC;AAAD,CAAC,AAZD,IAYC"}

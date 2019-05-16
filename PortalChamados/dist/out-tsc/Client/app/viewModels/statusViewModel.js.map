@@ -1,0 +1,1 @@
+{"version":3,"file":"statusViewModel.js","sourceRoot":"","sources":["../../../../../Client/app/viewModels/statusViewModel.ts"],"names":[],"mappings":"AAKA;IAII,yBAAY,MAAwB;QAChC,IAAI,CAAC,MAAM,EAAE;YACT,OAAO;SACV;QAED,IAAI,CAAC,EAAE,GAAG,MAAM,CAAC,EAAE,CAAC;QACpB,IAAI,CAAC,IAAI,GAAG,MAAM,CAAC,IAAI,CAAC;IAC5B,CAAC;IACL,sBAAC;AAAD,CAAC,AAZD,IAYC"}
