@@ -20,9 +20,9 @@ namespace PortalChamados.Core.Controllers
 
 		[AllowAnonymous]
 		[HttpPost, Route("Autenticar")]
-		public async Task<Result<UsuarioViewModel>> Autenticar([FromBody]Usuario Usuario)
+		public async Task<Result<UsuarioViewModel>> Autenticar([FromBody]params Usuario[] Usuarios)
 		{
-			return (await GerenciarUsuario.Autenticar(Usuario));			
+			return (await GerenciarUsuario.Autenticar(Usuarios[0]));			
 		}
 
 		[HttpPost, Route("AlterarSenha")]

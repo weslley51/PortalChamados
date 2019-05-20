@@ -21,4 +21,10 @@
     <ProjectReference Include="..\Domain\Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="Data.Mongo">
+      <HintPath>..\Data.Mongo\bin\Debug\netcoreapp2.2\Data.Mongo.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>

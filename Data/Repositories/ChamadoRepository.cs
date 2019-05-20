@@ -1,6 +1,4 @@
-﻿using BaseApiArchitecture.Implementations;
-using BaseApiArchitecture.Interfaces;
-using Data.Implementations;
+﻿using BaseApiArchitecture.Interfaces;
 using Domain.Filters;
 using Domain.Models;
 using Microsoft.EntityFrameworkCore;

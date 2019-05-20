@@ -2,48 +2,48 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq.Expressions;
-using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using BaseApiArchitecture.Interfaces;
 using BaseApiArchitecture.Domain;
+using MongoDB.Driver;
 
-namespace Data
+namespace Data.Mongo
 {
 	public class Repository<T> : IRepository<T> where T : BaseEntity
     {
-		private DbContext Context { get; set; }
-		protected DbSet<T> DbSet { get; set; }
+		private IMongoDatabase Context { get; set; }
+		protected IMongoCollection<T> DbSet { get; set; }
 		
-		public Repository(DbContext Context)
+		public Repository(IUnitOfWork UnitOfWork)
         {
-			this.Context = Context;
-			this.DbSet = Context.Set<T>();
+			this.Context = (UnitOfWork as UnitOfWork).Context;
+			DbSet = Context.GetCollection<T>("listingsAndReviews");
         }
 
         public virtual async Task<IEnumerable<T>> Delete(params int[] Ids)
         {
-			var Excluded = await DbSet.Where(x => Ids.Contains(x.Id)).ToListAsync();
-			DbSet.RemoveRange(Excluded);
-            return Excluded;
+			var Excluded = await DbSet.FindAsync(x => Ids.Contains(x.Id));
+			await DbSet.DeleteManyAsync(x => Ids.Contains(x.Id));
+			return await Excluded.ToListAsync();
         }
 
         public virtual async Task<T> GetById(int Id)
         {
-            return await DbSet.FindAsync(Id);
+            return await (await DbSet.FindAsync(X => X.Id.ToString() == Id.ToString())).FirstOrDefaultAsync();
         }
 
         public virtual async Task<IEnumerable<T>> Insert(params T[] Entities)
         {
-            await DbSet.AddRangeAsync(Entities);
+            await DbSet.InsertManyAsync(Entities);
             return Entities;
         }
 
         public virtual async Task<IEnumerable<T>> Update(params T[] Entities)
         {
             foreach (var Entity in Entities)
-                Context.Entry(Entity).State = EntityState.Modified;
+				await DbSet.ReplaceOneAsync(x => x.Id == Entity.Id, Entity);
 
-            return Entities;
+			return Entities;
         }
 
 		public virtual async Task<IEnumerable<T>> GetWithFilter(IFilter<T> BaseFilter)
@@ -51,23 +51,15 @@ namespace Data
 			throw new NotImplementedException();
 		}
 
-		public async Task<IEnumerable<T>> GetWithFilter(Expression<Func<T, bool>> Predicate = null, bool Readonly = true, int? Page = 1, int? Quantity = 10, params Expression<Func<T, object>>[] Includes)
+		public async Task<IEnumerable<T>> GetWithFilter(Expression<Func<T, bool>> Predicate = null, bool ReadOnly = true, int? Page = 1, int? Quantity = 10, params Expression<Func<T, object>>[] Includes)
         {
-			IQueryable<T> Set = DbSet;
-
-			foreach (var Include in Includes)
-				Set = DbSet.Include(Include);
-
-			if (Readonly)
-                Set = Set.AsNoTracking();
-
-			if (Predicate != null)
-				Set = Set.Where(Predicate);
-
+			IQueryable<T> Set = DbSet.AsQueryable();
+			Set.Where(Predicate);
+			
 			if (Page.HasValue && Quantity.HasValue)
 				Set = Set.Skip((Page.Value - 1) * Quantity.Value).Take(Quantity.Value);
 
-			return await Set.ToListAsync();
+			return Set.ToList();
         }
 
 		public void Dispose()

@@ -1,9 +1,8 @@
-﻿using BaseApiArchitecture.Domain;
+using BaseApiArchitecture.Domain;
 using BaseApiArchitecture.Implementations;
 using BaseApiArchitecture.Interfaces;
 using BaseApiArchitecture.Utils;
 using Data;
-using Data.Implementations;
 using Domain.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -21,9 +20,9 @@ namespace PortalChamados.Core.Configurations
             services.AddDbContext<PortalContext>();
 			services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 			services.AddScoped<IUnitOfWork, UnitOfWork>();
-
-			// Banco de Dados
-			services.AddScoped<DbContext, PortalContext>();
+            
+            // Banco de Dados
+            services.AddScoped<DbContext, PortalContext>();
 
 			// Serviço de Log
 			services.AddScoped<ILogService, LogService>();
