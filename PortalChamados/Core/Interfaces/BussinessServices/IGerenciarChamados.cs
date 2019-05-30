@@ -1,4 +1,4 @@
-﻿using BaseApiArchitecture.Domain;
+using BaseApiArchitecture.Domain;
 using BaseApiArchitecture.Interfaces;
 using Domain.Models;
 using System.Collections.Generic;
@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace PortalChamados.Core.Interfaces.BussinessServices
 {
-	public interface IGerenciarChamados : IBaseOperations<Chamado>
+	public interface IGerenciarChamados 
 	{
-		Task<IEnumerable<Result<Chamado>>> Novo(params Chamado[] Entities);
-		Task<IEnumerable<Result<Chamado>>> Finalizar(params Chamado[] Entities);
+		Task<Result<Chamado>> Novo(Chamado Chamados);
+        Task<Result<Chamado>> Alterar(Chamado Chamado);
+        Task<Result<Chamado>> Finalizar(Chamado Chamados);
 	}
 }

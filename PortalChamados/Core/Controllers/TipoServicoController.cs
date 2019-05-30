@@ -6,7 +6,7 @@ namespace PortalChamados.Core.Controllers
 {
 	public class TipoServicoController : Controller<TipoServico>
 	{
-		public TipoServicoController(IBaseOperations<TipoServico> BussinessService) : base(BussinessService)
+		public TipoServicoController(IProcessmentCommand<TipoServico> BussinessService) : base(BussinessService)
 		{
 		}
 	}

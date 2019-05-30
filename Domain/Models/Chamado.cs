@@ -9,13 +9,13 @@ namespace Domain.Models
 {
 	public class Chamado : DomainEntity
 	{
-		public bool? FechamentoAceito { get; private set; }
 		public string Descricao { get; set; }
 		public string Titulo { get; set; }
 		public string Telefone { get; set; }
 		public DateTime? DataSolicitacao { get; private set; }
 		public DateTime? DataFimPrazo { get; private set; }
 		public DateTime? DataFechamento { get; private set; }
+		public DateTime? DataAceiteFechamento { get; private set; }
 		public Prioridade Prioridade { get; private set; }
 		public Nota? NotaAtendimento { get; set; }
 		public Servico Servico { get; set; }
@@ -37,7 +37,7 @@ namespace Domain.Models
 
 			if (!Descricao.IsGreatenThan(5))
 				Erros.Add("Descrição deve ser preenchida e deve ser maior que 5!");
-			
+
 			if (Servico == null || Servico.Id <= 0)
 				Erros.Add("Serviço deve ser preenchido!");
 
@@ -52,19 +52,15 @@ namespace Domain.Models
 				if (!DataSolicitacao.HasValue)
 					DataSolicitacao = DateTime.Now;
 
-				if (!DataFimPrazo.HasValue)
-					DataFimPrazo = DateTime.Now;
-
 				CalcularPrazo();
-				VerificarStatus();
 			}
 
 			return Erros;
 		}
 
-		public void SetAlteracoes(Chamado Entity)
+		public void SetarAlteracoes(Chamado Entity)
 		{
-			if (!FechamentoAceito.HasValue || !DataFechamento.HasValue)
+			if (!DataAceiteFechamento.HasValue || !DataFechamento.HasValue)
 			{
 				Descricao = Entity.Descricao;
 				Titulo = Entity.Titulo;
@@ -72,13 +68,23 @@ namespace Domain.Models
 				Solucionador = Entity.Solucionador;
 			}
 
-			if (!DataFechamento.HasValue)
-				DataFechamento = DateTime.Now;
-			else
-				FechamentoAceito = Entity.FechamentoAceito;
-
 			CalcularPrazo();
-			VerificarStatus();
+		}
+
+		public void SolicitarFechamento()
+		{
+			DataFechamento = DateTime.Now;
+			CalcularPrazo();
+		}
+
+		public void ResponderSolicitacaoFechamento(bool Aceito)
+		{
+			if (Aceito)
+				DataAceiteFechamento = DateTime.Now;
+			else
+				DataFechamento = null;
+
+			CalcularPrazo();			
 		}
 
 		private void CalcularPrazo()
@@ -87,20 +93,19 @@ namespace Domain.Models
 
 			while (Prazo > 0)
 			{
-				DataFimPrazo = DataFimPrazo.Value.AddDays(1);
+				DataFimPrazo = (DataFimPrazo.HasValue ? DataFimPrazo.Value : DateTime.Now).AddDays(1);
 
 				if (!new DayOfWeek[] { DayOfWeek.Sunday, DayOfWeek.Saturday }.Contains(DataFimPrazo.Value.DayOfWeek))
 					Prazo--;
 			}
+
+			VerificarStatus();
 		}
 
 		private void VerificarStatus()
 		{
-			//if (Chamado.?.Date == DateTime.Now.Date)
-			//	return await StatusRepository.GetById((int)SLA.VenceHoje);
-
-			if (DataFechamento.HasValue && FechamentoAceito.HasValue && FechamentoAceito.Value)
-				Status = new Status { Id = ((int)SLA.Finalizado) };
+			if (DataFechamento.HasValue)
+				Status = new Status { Id = DataAceiteFechamento.HasValue ? ((int)SLA.Finalizado) : ((int)SLA.Parado) };
 			else
 			{
 				if (DataFimPrazo?.Date == DateTime.Now.Date)

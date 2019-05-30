@@ -16,7 +16,7 @@ namespace Data.Repositories
 		{
 		}
 
-		public override async Task<Chamado> GetById(int Id)
+		public override async Task<Chamado> GetById(Chamado Chamado)
 		{
 			return await DbSet
 							.Include(x => x.Anexos)
@@ -29,7 +29,7 @@ namespace Data.Repositories
 							.Include(x => x.Solucionador)
 							//.Include(x => x.Solucionador.Unidade)
 							.Include(x => x.Status)
-							.FirstOrDefaultAsync(x => x.Id == Id);
+							.FirstOrDefaultAsync(x => x.Id == Chamado.Id);
 		}
 
 		public override async Task<IEnumerable<Chamado>> GetWithFilter(IFilter<Chamado> BaseFilter)

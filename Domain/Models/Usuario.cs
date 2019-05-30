@@ -1,4 +1,6 @@
 ﻿using BaseApiArchitecture.Domain;
+using BaseApiArchitecture.Utils;
+using System;
 using System.Collections.Generic;
 
 namespace Domain.Models
@@ -16,6 +18,12 @@ namespace Domain.Models
 		public override IEnumerable<string> IsValid()
 		{
 			throw new System.NotImplementedException();
+		}
+
+		public void ResetarSenha()
+		{
+			AlterarSenha = true;
+			Senha = Criptography.GetHash($"PortalChamados{DateTime.Now.Year}", Salt);
 		}
 	}
 }

@@ -20,30 +20,25 @@ namespace Data.Mongo
 			DbSet = Context.GetCollection<T>("listingsAndReviews");
         }
 
-        public virtual async Task<IEnumerable<T>> Delete(params int[] Ids)
+        public virtual async Task Delete(params T[] Entities)
         {
-			var Excluded = await DbSet.FindAsync(x => Ids.Contains(x.Id));
-			await DbSet.DeleteManyAsync(x => Ids.Contains(x.Id));
-			return await Excluded.ToListAsync();
+			await DbSet.DeleteManyAsync(x => Entities.Contains(x));			
         }
 
-        public virtual async Task<T> GetById(int Id)
+        public virtual async Task<T> GetById(T Entity)
         {
-            return await (await DbSet.FindAsync(X => X.Id.ToString() == Id.ToString())).FirstOrDefaultAsync();
+            return await (await DbSet.FindAsync(x => x == Entity)).FirstOrDefaultAsync();
         }
 
-        public virtual async Task<IEnumerable<T>> Insert(params T[] Entities)
+        public virtual async Task Insert(params T[] Entities)
         {
             await DbSet.InsertManyAsync(Entities);
-            return Entities;
         }
 
-        public virtual async Task<IEnumerable<T>> Update(params T[] Entities)
+        public virtual async Task Update(params T[] Entities)
         {
             foreach (var Entity in Entities)
-				await DbSet.ReplaceOneAsync(x => x.Id == Entity.Id, Entity);
-
-			return Entities;
+				await DbSet.ReplaceOneAsync(x => x == Entity, Entity);
         }
 
 		public virtual async Task<IEnumerable<T>> GetWithFilter(IFilter<T> BaseFilter)

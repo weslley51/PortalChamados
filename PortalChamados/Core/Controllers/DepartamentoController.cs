@@ -6,7 +6,7 @@ namespace PortalChamados.Core.Controllers
 {
 	public class DepartamentoController : Controller<Departamento>
 	{
-		public DepartamentoController(IBaseOperations<Departamento> BussinessService) : base(BussinessService)
+		public DepartamentoController(IProcessmentCommand<Departamento> BussinessService) : base(BussinessService)
 		{
 		}
 	}

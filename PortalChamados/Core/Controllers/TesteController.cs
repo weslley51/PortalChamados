@@ -6,7 +6,7 @@ namespace PortalChamados.Core.Controllers
 {
     public class TesteController : Controller<listingsAndReviews>
     {
-		public TesteController(IBaseOperations<listingsAndReviews> BaseOperations) : base(BaseOperations)
+		public TesteController(IProcessmentCommand<listingsAndReviews> BaseOperations) : base(BaseOperations)
         {
 		}
 	}

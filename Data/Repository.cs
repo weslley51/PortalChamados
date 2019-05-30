@@ -6,10 +6,11 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using BaseApiArchitecture.Interfaces;
 using BaseApiArchitecture.Domain;
+using Domain.Models;
 
 namespace Data
 {
-	public class Repository<T> : IRepository<T> where T : BaseEntity
+	public class Repository<T> : IRepository<T> where T : DomainEntity
     {
 		private DbContext Context { get; set; }
 		protected DbSet<T> DbSet { get; set; }
@@ -20,30 +21,34 @@ namespace Data
 			this.DbSet = Context.Set<T>();
         }
 
-        public virtual async Task<IEnumerable<T>> Delete(params int[] Ids)
+        public virtual async Task Delete(params T[] Entities)
         {
+			var Ids = Entities.Select(x => x.Id);
 			var Excluded = await DbSet.Where(x => Ids.Contains(x.Id)).ToListAsync();
 			DbSet.RemoveRange(Excluded);
-            return Excluded;
+            //return Excluded;
         }
 
-        public virtual async Task<T> GetById(int Id)
+        public virtual async Task<T> GetById(T Entity)
         {
-            return await DbSet.FindAsync(Id);
+			if (Entity != null)
+				return await DbSet.FindAsync(Entity);
+			else
+				return null;
         }
 
-        public virtual async Task<IEnumerable<T>> Insert(params T[] Entities)
+        public virtual async Task Insert(params T[] Entities)
         {
             await DbSet.AddRangeAsync(Entities);
-            return Entities;
+            //return Entities;
         }
 
-        public virtual async Task<IEnumerable<T>> Update(params T[] Entities)
+        public virtual async Task Update(params T[] Entities)
         {
             foreach (var Entity in Entities)
                 Context.Entry(Entity).State = EntityState.Modified;
 
-            return Entities;
+            //return Entities;
         }
 
 		public virtual async Task<IEnumerable<T>> GetWithFilter(IFilter<T> BaseFilter)

@@ -34,8 +34,8 @@ namespace PortalChamados.Core.Configurations
 			services.AddScoped<IGerenciarUsuarios, GerenciarUsuario>();
 
 			// Operações de CRUD
-			services.RegisterAllConcreteTypes(typeof(IBaseOperations<>), new[] { typeof(Usuario).Assembly, typeof(Startup).Assembly });
-			services.RegisterAllGenericTypes(typeof(IBaseOperations<>), typeof(BaseOperationsService<>), new[] { typeof(Usuario).Assembly, typeof(Startup).Assembly });
+			services.RegisterAllConcreteTypes(typeof(IProcessmentCommand<>), new[] { typeof(Usuario).Assembly, typeof(Startup).Assembly });
+			services.RegisterAllGenericTypes(typeof(IProcessmentCommand<>), typeof(BaseOperationsService<>), new[] { typeof(Usuario).Assembly, typeof(Startup).Assembly });
 
 			// Repositórios 
 			services.RegisterAllConcreteTypes(typeof(IRepository<>), new[] { typeof(Usuario).Assembly, typeof(Startup).Assembly });

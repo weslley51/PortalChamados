@@ -6,7 +6,7 @@ namespace PortalChamados.Core.Controllers
 {
 	public class GrupoServicoController : Controller<GrupoServico>
 	{
-		public GrupoServicoController(IBaseOperations<GrupoServico> BussinessService) : base(BussinessService)
+		public GrupoServicoController(IProcessmentCommand<GrupoServico> BussinessService) : base(BussinessService)
 		{
 		}
 	}

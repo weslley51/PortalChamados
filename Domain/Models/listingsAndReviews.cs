@@ -5,6 +5,7 @@ namespace Domain.Models
 {
 	public class listingsAndReviews : BaseEntity
 	{
+		public string _id { get; set; }
 		public string listing_url { get; set; }
 		public string name { get; set; }
 		public string summary { get; set; }

@@ -9,32 +9,39 @@ using PortalChamados.Core.Interfaces.BussinessServices;
 
 namespace PortalChamados.Core.Controllers
 {
-    public class UsuarioController : Controller<Usuario>
+    [Route("api/[controller]")]
+    public class UsuarioController : Controller
     {
 		private IGerenciarUsuarios GerenciarUsuario { get; set; }
 
-		public UsuarioController(IGerenciarUsuarios GerenciarUsuario) : base(GerenciarUsuario)
+		public UsuarioController(IGerenciarUsuarios GerenciarUsuario)
         {
 			this.GerenciarUsuario = GerenciarUsuario;
 		}
 
 		[AllowAnonymous]
-		[HttpPost, Route("Autenticar")]
+		[HttpPost("autenticar")]
 		public async Task<Result<UsuarioViewModel>> Autenticar([FromBody]params Usuario[] Usuarios)
 		{
-			return (await GerenciarUsuario.Autenticar(Usuarios[0]));			
+			return await GerenciarUsuario.Autenticar(Usuarios[0]);			
 		}
 
-		[HttpPost, Route("AlterarSenha")]
+		[HttpPost("alterar-senha")]
 		public async Task<Result<UsuarioViewModel>> AlterarSenha([FromBody]AlterarSenhaViewModel Usuario)
 		{
-			return (await GerenciarUsuario.AlterarSenha(Usuario));
+			return await GerenciarUsuario.AlterarSenha(Usuario);
 		}
 
-		[HttpPost, Route("ResetarSenha")]
+		[HttpPost("resetar-senha")]
 		public async Task<Result<UsuarioViewModel>> ResetarSenha([FromBody]Usuario Usuario)
 		{
-			return (await GerenciarUsuario.ResetarSenha(Usuario));
+			return await GerenciarUsuario.ResetarSenha(Usuario);
 		}
-	}
+
+        [HttpPut("{Id}/atualizar-permissoes")]
+        public async Task<Result<UsuarioViewModel>> AtualizarPermissoes(int Id, [FromBody]Permissao[] Permissoes)
+        {
+            return await GerenciarUsuario.AtualizarPermissoes(Id, Permissoes);
+        }
+    }
 }
